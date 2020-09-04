@@ -21,13 +21,21 @@ fn update(msg: Msg, model: &mut Model, _orders: &mut impl Orders<Msg>) {
 
 fn view(model: &Model) -> Node<Msg> {
     div![
+        img![
+            attrs!{At::Src => "LVLogo_small.png"}
+        ],
         input![
             attrs! {
                 At::Placeholder => "Enter some text..."
             },
             input_ev(Ev::Input, Msg::ChangeText),
         ],
-        div![&model.text_to_show]
+        button![
+            ev(Ev::Click, |_| log!("clicked")),
+            "Save"
+        ],
+        div![&model.text_to_show],
+        p!["test"]
     ]
 }
 
