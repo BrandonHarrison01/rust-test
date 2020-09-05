@@ -40,7 +40,7 @@ fn update(msg: Msg, model: &mut Model, _orders: &mut impl Orders<Msg>) {
             }
         },
         ClearAll => {
-            model.todos = mem::take(&mut model.todos)
+            log!("clearing all...")
         }
         RemoveTodo(id) => {
             model.todos.remove(&id);
@@ -55,7 +55,8 @@ fn view(model: &Model) -> Node<Msg> {
         ],
         input![
             attrs! {
-                At::Placeholder => "Enter some text..."
+                At::Placeholder => "Enter some text...",
+                At::Value => model.text_to_show
             },
             input_ev(Ev::Input, Msg::ChangeText),
         ],
@@ -71,18 +72,16 @@ fn view(model: &Model) -> Node<Msg> {
             model.todos.values().map(|todo| {
                 let id = todo.id;
 
-                li![&todo.title]
+                li![
+                    label![&todo.title],
+                    button![C!["delete-btn"],
+                        ev(Ev::Click, move |_| Msg::RemoveTodo(id)),
+                        "X"
+                    ],
+                    
+                ]
             })
-            // li![
-            //     label!["to do item"],
-            //     button![C!["delete-btn"],
-            //         ev(Ev::Click, move |_| Msg::RemoveTodo(id)),
-            //         "X"
-            //     ],
-            // ],
         ],
-        div![&model.text_to_show],
-        p!["test"]
     ]
 }
 
