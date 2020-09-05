@@ -1,14 +1,26 @@
 use seed::prelude::*;
 use seed::*;
+use ulid::Ulid;
+use std::collections::BTreeMap;
+use std::mem;
 
 #[derive(Default)]
 struct Model {
+    todos: BTreeMap<Ulid, Todo>,
     text_to_show: String,
+}
+
+struct Todo {
+    id: Ulid,
+    title: String
 }
 
 #[derive(Clone)]
 enum Msg {
     ChangeText(String),
+    CreateTodo,
+    ClearAll,
+    RemoveTodo(Ulid)
 }
 
 fn update(msg: Msg, model: &mut Model, _orders: &mut impl Orders<Msg>) {
@@ -16,6 +28,23 @@ fn update(msg: Msg, model: &mut Model, _orders: &mut impl Orders<Msg>) {
 
     match msg {
         ChangeText(new_text) => model.text_to_show = new_text,
+        CreateTodo => {
+            let title = model.text_to_show.trim();
+            if not(title.is_empty()) {
+                let id = Ulid::new();
+                model.todos.insert(id, Todo {
+                    id,
+                    title: title.to_owned()
+                });
+                model.text_to_show.clear();
+            }
+        },
+        ClearAll => {
+            model.todos = mem::take(&mut model.todos)
+        }
+        RemoveTodo(id) => {
+            model.todos.remove(&id);
+        }
     }
 }
 
@@ -30,9 +59,27 @@ fn view(model: &Model) -> Node<Msg> {
             },
             input_ev(Ev::Input, Msg::ChangeText),
         ],
-        button![
-            ev(Ev::Click, |_| log!("clicked")),
+        button![C!["save-btn"],
+            ev(Ev::Click, |_| Msg::CreateTodo),
             "Save"
+        ],
+        button![C!["clear-btn"],
+            ev(Ev::Click, |_| Msg::ClearAll),
+            "Clear"
+        ],
+        ul![
+            model.todos.values().map(|todo| {
+                let id = todo.id;
+
+                li![&todo.title]
+            })
+            // li![
+            //     label!["to do item"],
+            //     button![C!["delete-btn"],
+            //         ev(Ev::Click, move |_| Msg::RemoveTodo(id)),
+            //         "X"
+            //     ],
+            // ],
         ],
         div![&model.text_to_show],
         p!["test"]
@@ -40,7 +87,7 @@ fn view(model: &Model) -> Node<Msg> {
 }
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
-    Model::default()
+    Model:: default()
 }
 
 #[wasm_bindgen(start)]
