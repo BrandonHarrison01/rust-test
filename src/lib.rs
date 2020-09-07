@@ -2,7 +2,7 @@ use seed::prelude::*;
 use seed::*;
 use ulid::Ulid;
 use std::collections::BTreeMap;
-use std::mem;
+// use std::mem;
 
 #[derive(Default)]
 struct Model {
@@ -40,7 +40,8 @@ fn update(msg: Msg, model: &mut Model, _orders: &mut impl Orders<Msg>) {
             }
         },
         ClearAll => {
-            log!("clearing all...")
+            model.todos.clear();
+            log!("test");
         }
         RemoveTodo(id) => {
             model.todos.remove(&id);
@@ -49,24 +50,27 @@ fn update(msg: Msg, model: &mut Model, _orders: &mut impl Orders<Msg>) {
 }
 
 fn view(model: &Model) -> Node<Msg> {
-    div![
+    div![C!["container"],
         img![
             attrs!{At::Src => "LVLogo_small.png"}
         ],
         input![
             attrs! {
-                At::Placeholder => "Enter some text...",
-                At::Value => model.text_to_show
+                At::Placeholder => "Name",
+                At::Value => model.text_to_show,
+                At::Name => "name"
             },
             input_ev(Ev::Input, Msg::ChangeText),
         ],
-        button![C!["save-btn"],
+        div![C!["buttons"],
+            button![C!["btn green"],
             ev(Ev::Click, |_| Msg::CreateTodo),
             "Save"
-        ],
-        button![C!["clear-btn"],
+            ],
+            button![C!["btn yellow"],
             ev(Ev::Click, |_| Msg::ClearAll),
             "Clear"
+            ],
         ],
         ul![
             model.todos.values().map(|todo| {
