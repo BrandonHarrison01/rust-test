@@ -69,7 +69,7 @@ fn view(model: &Model) -> Node<Msg> {
             ],
             button![C!["btn yellow"],
             ev(Ev::Click, |_| Msg::ClearAll),
-            "Clear"
+            "Clear All"
             ],
         ],
         ul![

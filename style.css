@@ -16,6 +16,7 @@ body {
 }
 
 input {
+    width: 300px;
     margin: 30px 0;
     border: 0;
     border-bottom: 2px solid #9b9b9b;
@@ -24,6 +25,12 @@ input {
     color: black;
     padding: 7px 0;
     background: transparent;
+}
+
+.buttons {
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
 }
 
 .btn {
@@ -47,10 +54,34 @@ ul {
     border-top: 2px solid gray;
     padding-top: 30px;
     width: 400px;
+    list-style-type: none;
 }
 
 li {
-    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+    /* padding: 30px 50px; */
     margin-top: 20px;
     border: 1px solid gray;
+    border-radius: 20px;
+    box-shadow: 10px 10px 24px -4px rgba(0,0,0,0.75);
+    font-size: 1.5rem;
+}
+
+.delete-btn {
+    border: none;
+    border-left: 1px solid gray;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    font-size: 1.5rem;
+    padding: 20px;
+    background: transparent;
+}
+
+label {
+    margin: 30px 50px;
+}
+
+button:hover {
+    background-color: rgb(219, 219, 219);
 }
